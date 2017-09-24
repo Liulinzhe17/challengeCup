@@ -1,0 +1,32 @@
+//
+//  SpyOnPrefixHeader.pch
+//  spy on
+//
+//  Created by 柳麟喆 on 2017/8/18.
+//  Copyright © 2017年 lzLiu. All rights reserved.
+//
+
+#ifndef SpyOnPrefixHeader_pch
+#define SpyOnPrefixHeader_pch
+
+#define SCREEN_WIDTH [UIScreen mainScreen].bounds.size.width
+#define SCREEN_HEIGHT [UIScreen mainScreen].bounds.size.height
+#define STATUS_HEIGHT [[UIApplication sharedApplication] statusBarFrame].size.height
+
+#define LLZRect(x, y, w, h)  CGRectMake(SCREEN_WIDTH * x, SCREEN_HEIGHT * y, SCREEN_WIDTH * w,  SCREEN_HEIGHT * h)
+#define LLZRGBA(r, g, b,a) [UIColor colorWithRed:(r)/255.0 green:(g)/255.0 blue:(b)/255.0 alpha:(a)]
+#define LLZFont(f) [UIFont systemFontOfSize:SCREEN_WIDTH * f]
+
+#define USER [NSUserDefaults standardUserDefaults]
+//百度地图
+#define SERVICE_ID 150634
+#define AK @"X37BkKdY51uuGrM0BNh1xANmvirXKvCN"
+#define MCODE @"com.lzLiu.challengeCup"
+
+
+#endif /* SpyOnPrefixHeader_pch */
+
+/*公用库*/
+#import "SVProgressHUD.h"
+#import "BaiduTraceSDK/BaiduTraceSDK.h"
+#import <BmobSDK/Bmob.h>
