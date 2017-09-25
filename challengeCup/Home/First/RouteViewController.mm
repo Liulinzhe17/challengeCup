@@ -277,7 +277,7 @@
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(showStayPointTrack:) name:@"StayPoint" object:nil];
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(showAnalysisResult:) name:@"analysis" object:nil];
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(updateUserPreferences:) name:@"settings" object:nil];
-    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(addPoint) name:@"addPoint" object:nil];
+    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(addPoint:) name:@"addPoint" object:nil];
     
     
     
@@ -771,7 +771,7 @@
         });
     }
     dispatch_group_notify(group, dispatch_get_main_queue(), ^{
-        [[NSNotificationCenter defaultCenter]postNotificationName:@"addPoint" object:nil];
+        [[NSNotificationCenter defaultCenter]postNotificationName:@"addPoint" object:self.detailRoute];
     });
     
     
@@ -974,28 +974,6 @@
     }
     
     
-}
-//加标注
--(void)addPoint{
-    
-    customAnnotation=[[BMKPointAnnotation alloc]init];
-    customAnnotation.coordinate=CLLocationCoordinate2DMake(self.start.latitude.doubleValue, self.start.longitude.doubleValue);
-    customAnnotation.title=[self shijiancuoToTime:self.start.end_time];
-    [self.mapView addAnnotation:customAnnotation];
-    
-    customAnnotation=[[BMKPointAnnotation alloc]init];
-    customAnnotation.coordinate=CLLocationCoordinate2DMake(self.end.latitude.doubleValue, self.end.longitude.doubleValue);
-    customAnnotation.title=[self shijiancuoToTime:self.end.start_time];
-    [self.mapView addAnnotation:customAnnotation];
-    
-    for (int i=0; i<self.detailRoute.count; i++) {
-        detailPoint *p=[[detailPoint alloc]initWithDict:self.detailRoute[i]];
-        customAnnotation=[[BMKPointAnnotation alloc]init];
-        customAnnotation.coordinate=CLLocationCoordinate2DMake(p.latitude.doubleValue, p.longitude.doubleValue);
-        customAnnotation.title=[self shijiancuoToTime:p.loc_time];
-        [self.mapView addAnnotation:customAnnotation];
-    }
-    [self mapAutoZoom];
 }
 //地图自动缩放
 -(void)mapAutoZoom{
@@ -1506,7 +1484,7 @@
     delete [] locations;
 
 }
-//综合分析得到8个最高频率的点
+//处理回调数据并且显示最常去的线路
 -(void)showAnalysisResult:(NSNotification *)noti{
     //如果没有常去的两个停留点
     if (self.analysisPoints.count<2) {
@@ -1714,6 +1692,33 @@
     
 
 }
+//加标注
+-(void)addPoint:(NSNotification *)noti{
+    //拦截
+    NSMutableArray *arr=noti.object;
+    if (arr.count<1) {
+        return;
+    }
+    customAnnotation=[[BMKPointAnnotation alloc]init];
+    customAnnotation.coordinate=CLLocationCoordinate2DMake(self.start.latitude.doubleValue, self.start.longitude.doubleValue);
+    customAnnotation.title=[self shijiancuoToTime:self.start.end_time];
+    [self.mapView addAnnotation:customAnnotation];
+    
+    customAnnotation=[[BMKPointAnnotation alloc]init];
+    customAnnotation.coordinate=CLLocationCoordinate2DMake(self.end.latitude.doubleValue, self.end.longitude.doubleValue);
+    customAnnotation.title=[self shijiancuoToTime:self.end.start_time];
+    [self.mapView addAnnotation:customAnnotation];
+    
+    for (int i=0; i<self.detailRoute.count; i++) {
+        detailPoint *p=[[detailPoint alloc]initWithDict:self.detailRoute[i]];
+        customAnnotation=[[BMKPointAnnotation alloc]init];
+        customAnnotation.coordinate=CLLocationCoordinate2DMake(p.latitude.doubleValue, p.longitude.doubleValue);
+        customAnnotation.title=[self shijiancuoToTime:p.loc_time];
+        [self.mapView addAnnotation:customAnnotation];
+    }
+    [self mapAutoZoom];
+}
+
 //通知-获取选择时间
 -(void)getTime:(NSNotification *)notification{
     self.selTime.text=notification.object;
