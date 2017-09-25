@@ -22,6 +22,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
+    [self startAutoGather];
     [self upLoadEntity];
     
     myscrollView=[[UIScrollView alloc]initWithFrame:LLZRect(0, 0, 1, 1)];
@@ -77,6 +78,10 @@
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView{
     // 计算当前在第几页
     pageControl.currentPage = (NSInteger)(scrollView.contentOffset.x / SCREEN_WIDTH);
+}
+#pragma mark - 默认自动开启采集
+-(void)startAutoGather{
+    [USER setBool:YES forKey:@"isAutoGather"];
 }
 #pragma mark - 将本机名字作为entity
 -(void)upLoadEntity{

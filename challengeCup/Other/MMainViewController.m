@@ -38,6 +38,7 @@
         v2.swGather.on=YES;
         [v2 openUpService];
     }
+
     
     CustomViewController *v3=[[CustomViewController alloc]init];
     v3.tabBarItem.title=@"用户";

@@ -43,12 +43,11 @@
     self.window =[[UIWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];
     self.window.backgroundColor=[UIColor whiteColor];
     /*正确开始*/
-    MMainViewController *mmain=[[MMainViewController alloc]init];
-    YDViewController *yd=[[YDViewController alloc]init];
-    
     if (![USER boolForKey:@"notFirst"]) {
+        YDViewController *yd=[[YDViewController alloc]init];
         self.window.rootViewController = yd;
     }else{
+        MMainViewController *mmain=[[MMainViewController alloc]init];
         self.window.rootViewController = mmain;
     }
     
@@ -106,7 +105,7 @@
 }
 #pragma mark -服务器初始化
 -(BOOL)initService{
-    BTKServiceOption *sop = [[BTKServiceOption alloc] initWithAK:AK mcode:MCODE serviceID:SERVICE_ID keepAlive:false];
+    BTKServiceOption *sop = [[BTKServiceOption alloc] initWithAK:AK mcode:MCODE serviceID:SERVICE_ID keepAlive:true];
     return [[BTKAction sharedInstance] initInfo:sop];
 }
 @end

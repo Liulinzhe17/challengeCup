@@ -806,8 +806,8 @@
         return;
     }
     BMKMapPoint pt = polyLine.points[0];
-    ltX = pt.x, ltY = pt.y;
-    rbX = pt.x, rbY = pt.y;
+    ltX = pt.x;ltY = pt.y;
+    rbX = pt.x;rbY = pt.y;
     for (int i = 1; i < polyLine.pointCount; i++) {
         BMKMapPoint pt = polyLine.points[i];
         if (pt.x < ltX) {
@@ -839,7 +839,7 @@
     NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
     [formatter setDateStyle:NSDateFormatterMediumStyle];
     [formatter setTimeStyle:NSDateFormatterShortStyle];
-    [formatter setDateFormat:@"HH:mm"]; // ----------设置你想要的格式,hh与HH的区别:分别表示12小时制,24小时制
+    [formatter setDateFormat:@"HH:mm:ss"]; // ----------设置你想要的格式,hh与HH的区别:分别表示12小时制,24小时制
     NSString *confromTimespStr = [formatter stringFromDate:confromTimesp];
     return confromTimespStr;
 }
@@ -1357,7 +1357,7 @@
         NSString *endTime=[point objectForKey:@"end_time"];
         NSString *lon=[NSString stringWithFormat:@"%@",longitude];
         NSString *lat=[NSString stringWithFormat:@"%@",latitude];
-        NSString *title=[NSString stringWithFormat:@"%d.%@-%@",i,[XMHelper timeFromTimeStamp:startTime],[XMHelper timeFromTimeStamp:endTime]];
+        NSString *title=[NSString stringWithFormat:@"%d.%@到%@",i,[XMHelper timeFromTimeStamp:startTime],[XMHelper timeFromTimeStamp:endTime]];
         NSString *subtitle=[NSString stringWithFormat:@"经度：%.7f，纬度：%.7f",lon.doubleValue,lat.doubleValue];
         a1.title=title;
         a1.subtitle=subtitle;
@@ -1440,7 +1440,7 @@
         //以标注的形式添加到地图上
         customAnnotation=[[BMKPointAnnotation alloc]init];
         customAnnotation.coordinate=locations[i];
-        customAnnotation.title=[[poisWithoutZero objectAtIndex:i]objectForKey:@"create_time"];
+        customAnnotation.title=[XMHelper timeFromTimeStamp:[[poisWithoutZero objectAtIndex:i]objectForKey:@"loc_time"]] ;
         [self.mapView addAnnotation:customAnnotation];
         
     }
@@ -1451,7 +1451,7 @@
     NSString *str=[NSString stringWithFormat:@"正在为你回放轨迹至%@",confromTimespStr];
     self.TimeLable.text=str;
 
-    sportNodeNum = sportNodes.count;
+//    sportNodeNum = sportNodes.count;
     //加initAnnotation sportAnnotation
     //[self start];
 

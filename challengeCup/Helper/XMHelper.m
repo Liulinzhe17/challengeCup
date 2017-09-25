@@ -16,7 +16,7 @@
     NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
     [formatter setDateStyle:NSDateFormatterMediumStyle];
     [formatter setTimeStyle:NSDateFormatterShortStyle];
-    [formatter setDateFormat:@"YYYY-MM-dd HH:mm"]; // ----------设置你想要的格式,hh与HH的区别:分别表示12小时制,24小时制
+    [formatter setDateFormat:@"YY-MM-dd HH:mm:ss"]; // ----------设置你想要的格式,hh与HH的区别:分别表示12小时制,24小时制
     NSString *confromTimespStr = [formatter stringFromDate:confromTimesp];
     return confromTimespStr;
 }
@@ -32,12 +32,14 @@
     NSArray *arr1=[time1 componentsSeparatedByString:@":"];
     NSString *hour1=arr1[0];
     NSString *minute1=arr1[1];
+    NSString *seconds1=arr1[2];
     
     NSArray *arr2=[time2 componentsSeparatedByString:@":"];
     NSString *hour2=arr2[0];
     NSString *minute2=arr2[1];
+    NSString *seconds2=arr2[2];
     
-    int result=abs((hour1.intValue*60+minute1.intValue)-(hour2.intValue*60+minute2.intValue));
+    int result=abs((hour1.intValue*3600+minute1.intValue*60+seconds1.intValue)-(hour2.intValue*3600+minute2.intValue*60+seconds2.intValue));
     return [NSString stringWithFormat:@"%d",result];
     
 }
