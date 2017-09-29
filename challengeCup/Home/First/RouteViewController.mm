@@ -1009,6 +1009,19 @@
     // 设定当前地图的显示范围
     [self.mapView setRegion:viewRegion animated:YES];
 }
+#pragma mark - 弹出提醒框
+-(void)showAlert{
+    NSString *str=[NSString stringWithFormat:@"预期%@，实际%@",self.test_expect,self.test_reality];
+    UIAlertController *alertVC=[UIAlertController alertControllerWithTitle:@"测试" message:str preferredStyle:UIAlertControllerStyleAlert];
+    UIAlertAction *ok=[UIAlertAction actionWithTitle:@"上传数据" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action){
+        //将数据上传到Bmob后台
+        [self uploadDataToBmob];
+    }];
+    UIAlertAction *cancel=[UIAlertAction actionWithTitle:@"放弃" style:UIAlertActionStyleCancel handler:nil];
+    [alertVC addAction:ok];
+    [alertVC addAction:cancel];
+    [self presentViewController:alertVC animated:YES completion:nil];
+}
 #pragma mark - 上传数据（entity，采集时间，导航结果）
 -(void)uploadDataToBmob{
     [SVProgressHUD show];
@@ -1044,7 +1057,7 @@
             [SVProgressHUD dismissWithDelay:1.0];
         }else{
             [SVProgressHUD showErrorWithStatus:[NSString stringWithFormat:@"%@",error]];
-            [SVProgressHUD dismissWithDelay:1.0];
+            [SVProgressHUD dismissWithDelay:3.0];
         }
     }];
 }
@@ -1831,17 +1844,7 @@
             if (distance<100) {
                 isNavOver=true;
                 self.lbNotice.text=@"你已经到达目的地.";
-                
-                NSString *str=[NSString stringWithFormat:@"预期%@，实际%@",self.test_expect,self.test_reality];
-                UIAlertController *alertVC=[UIAlertController alertControllerWithTitle:@"测试" message:str preferredStyle:UIAlertControllerStyleAlert];
-                UIAlertAction *ok=[UIAlertAction actionWithTitle:@"上传数据" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action){
-                    //将数据上传到Bmob后台
-                    [self uploadDataToBmob];
-                }];
-                UIAlertAction *cancel=[UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleCancel handler:nil];
-                [alertVC addAction:ok];
-                [alertVC addAction:cancel];
-                [self presentViewController:alertVC animated:YES completion:nil];
+                [self showAlert];
             }else{
                 double min=99999;
                 int index=(int)(self.detailRoute.count-1);
