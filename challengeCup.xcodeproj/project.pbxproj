@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		413F93AE1F76B8720031B736 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 413F93AD1F76B8720031B736 /* Assets.xcassets */; };
+		411E6CD01F7DF0B700AAA8C5 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 411E6CCF1F7DF0B700AAA8C5 /* Assets.xcassets */; };
 		418DC0091F7647CC00BE4EF0 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 418DC0071F7647CC00BE4EF0 /* Main.storyboard */; };
 		418DC00E1F7647CC00BE4EF0 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 418DC00C1F7647CC00BE4EF0 /* LaunchScreen.storyboard */; };
 		418DC0111F7647CC00BE4EF0 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 418DC0101F7647CC00BE4EF0 /* main.m */; };
@@ -87,7 +87,7 @@
 
 /* Begin PBXFileReference section */
 		369D17A6D35F201C5B8493C5 /* Pods-challengeCup.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-challengeCup.debug.xcconfig"; path = "Pods/Target Support Files/Pods-challengeCup/Pods-challengeCup.debug.xcconfig"; sourceTree = "<group>"; };
-		413F93AD1F76B8720031B736 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		411E6CCF1F7DF0B700AAA8C5 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		418DBFFE1F7647CC00BE4EF0 /* challengeCup.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = challengeCup.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		418DC0081F7647CC00BE4EF0 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		418DC00D1F7647CC00BE4EF0 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
@@ -290,7 +290,7 @@
 				418DC00C1F7647CC00BE4EF0 /* LaunchScreen.storyboard */,
 				418DC00F1F7647CC00BE4EF0 /* Info.plist */,
 				418DC0101F7647CC00BE4EF0 /* main.m */,
-				413F93AD1F76B8720031B736 /* Assets.xcassets */,
+				411E6CCF1F7DF0B700AAA8C5 /* Assets.xcassets */,
 			);
 			path = Other;
 			sourceTree = "<group>";
@@ -535,7 +535,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				418DC00E1F7647CC00BE4EF0 /* LaunchScreen.storyboard in Resources */,
-				413F93AE1F76B8720031B736 /* Assets.xcassets in Resources */,
+				411E6CD01F7DF0B700AAA8C5 /* Assets.xcassets in Resources */,
 				418DC0091F7647CC00BE4EF0 /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

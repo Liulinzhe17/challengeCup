@@ -1729,6 +1729,10 @@
         customAnnotation.title=[self shijiancuoToTime:p.loc_time];
         [self.mapView addAnnotation:customAnnotation];
     }
+    //倒计时（end-start）
+    double time=[self calculateTimeWithStart:self.start.end_time end:self.end.start_time];
+    self.lbNotice.text=[NSString stringWithFormat:@"预计%.0f秒到达目的地",time];
+    //自动调整地图大小
     [self mapAutoZoom];
 }
 
@@ -1841,9 +1845,16 @@
             NSUInteger now=[[NSDate date]timeIntervalSince1970];
             NSUInteger result=(now-self.test_now);//实际时间
             double distance=[self calculateDistanceWithStart:CLLocationCoordinate2DMake(userLocation.location.coordinate.latitude, userLocation.location.coordinate.longitude) end:CLLocationCoordinate2DMake(self.end.latitude.doubleValue, self.end.longitude.doubleValue)];
-            if (distance<100) {
+            if (distance<200) {
                 isNavOver=true;
                 self.lbNotice.text=@"你已经到达目的地.";
+                double time=0;;
+                if ([self.test_expect containsObject:[NSString stringWithFormat:@"%.0f",time]]) {
+                    
+                }else{
+                    [self.test_expect addObject:[NSString stringWithFormat:@"%.0f",time]];
+                    [self.test_reality addObject:[NSString stringWithFormat:@"%lu",(unsigned long)result]];
+                }
                 [self showAlert];
             }else{
                 double min=99999;
