@@ -51,6 +51,8 @@
 		418DC09D1F765A0F00BE4EF0 /* XMHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 418DC03F1F7649E200BE4EF0 /* XMHelper.m */; };
 		418DC09F1F765E3700BE4EF0 /* BaiduTraceSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 418DC09E1F765E3700BE4EF0 /* BaiduTraceSDK.framework */; };
 		418DC0A01F765E3700BE4EF0 /* BaiduTraceSDK.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 418DC09E1F765E3700BE4EF0 /* BaiduTraceSDK.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		41DC2FC71FA176210015A164 /* 采集点运动方法 in Resources */ = {isa = PBXBuildFile; fileRef = 41DC2FC61FA176210015A164 /* 采集点运动方法 */; };
+		41DC2FC91FA177EC0015A164 /* 逆地理检索 in Resources */ = {isa = PBXBuildFile; fileRef = 41DC2FC81FA177EC0015A164 /* 逆地理检索 */; };
 		721775DA2DC78149B456EE93 /* libPods-challengeCup.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 838D08D4D639958A45768D8C /* libPods-challengeCup.a */; };
 /* End PBXBuildFile section */
 
@@ -157,6 +159,8 @@
 		418DC0871F7654D300BE4EF0 /* libicucore.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libicucore.tbd; path = usr/lib/libicucore.tbd; sourceTree = SDKROOT; };
 		418DC0891F7654EC00BE4EF0 /* libc++.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = "libc++.tbd"; path = "usr/lib/libc++.tbd"; sourceTree = SDKROOT; };
 		418DC09E1F765E3700BE4EF0 /* BaiduTraceSDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = BaiduTraceSDK.framework; sourceTree = "<group>"; };
+		41DC2FC61FA176210015A164 /* 采集点运动方法 */ = {isa = PBXFileReference; lastKnownFileType = text; path = "采集点运动方法"; sourceTree = "<group>"; };
+		41DC2FC81FA177EC0015A164 /* 逆地理检索 */ = {isa = PBXFileReference; lastKnownFileType = text; path = "逆地理检索"; sourceTree = "<group>"; };
 		6DA7948F1D65567971DCF530 /* Pods-challengeCup.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-challengeCup.release.xcconfig"; path = "Pods/Target Support Files/Pods-challengeCup/Pods-challengeCup.release.xcconfig"; sourceTree = "<group>"; };
 		838D08D4D639958A45768D8C /* libPods-challengeCup.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-challengeCup.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -230,6 +234,7 @@
 		418DC0001F7647CC00BE4EF0 /* challengeCup */ = {
 			isa = PBXGroup;
 			children = (
+				41DC2FC41FA175620015A164 /* Tpl */,
 				418DC0351F76486B00BE4EF0 /* Other */,
 				418DC0361F76487B00BE4EF0 /* Home */,
 				418DC0341F76485D00BE4EF0 /* Setting */,
@@ -385,6 +390,15 @@
 			path = Model;
 			sourceTree = "<group>";
 		};
+		41DC2FC41FA175620015A164 /* Tpl */ = {
+			isa = PBXGroup;
+			children = (
+				41DC2FC61FA176210015A164 /* 采集点运动方法 */,
+				41DC2FC81FA177EC0015A164 /* 逆地理检索 */,
+			);
+			path = Tpl;
+			sourceTree = "<group>";
+		};
 		62193EAB648AE7DDE5F1063C /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
@@ -537,6 +551,8 @@
 				418DC00E1F7647CC00BE4EF0 /* LaunchScreen.storyboard in Resources */,
 				411E6CD01F7DF0B700AAA8C5 /* Assets.xcassets in Resources */,
 				418DC0091F7647CC00BE4EF0 /* Main.storyboard in Resources */,
+				41DC2FC71FA176210015A164 /* 采集点运动方法 in Resources */,
+				41DC2FC91FA177EC0015A164 /* 逆地理检索 in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

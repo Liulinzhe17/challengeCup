@@ -1,0 +1,9 @@
+//注释代码内容：发起逆地理检索，并且移除原先的点
+//    if (view.annotation.subtitle==NULL) {
+//        //逆地理检索
+//        BMKReverseGeoCodeOption *reverseGeocodeSearchOption = [[BMKReverseGeoCodeOption alloc]init];
+//        reverseGeocodeSearchOption.reverseGeoPoint =view.annotation.coordinate;
+//        [self.geocodesearch reverseGeoCode:reverseGeocodeSearchOption];
+//        [self.mapView removeAnnotation:view.annotation];
+//        NSLog(@"替换");
+//    }

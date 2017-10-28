@@ -1,0 +1,29 @@
+#pragma mark - 采集点运动的方法
+//-(void)start{
+//    //NSLog(@"%d",(int)sportNodeNum);
+//    sportAnnotation = [[BMKPointAnnotation alloc]init];
+//    BMKSportNode *node=sportNodes[0];
+//    sportAnnotation.coordinate = node.coordinate;
+//    [self.mapView addAnnotation:sportAnnotation];
+//
+//    initAnnotation=[[BMKPointAnnotation alloc]init];
+//    BMKSportNode *initnode=sportNodes[sportNodeNum-1];
+//    initAnnotation.coordinate=initnode.coordinate;
+//    [self.mapView addAnnotation:initAnnotation];
+//
+//    currentIndex = 0;
+//}
+//-(void)running {
+//    [UIView animateWithDuration:0.3 animations:^{
+//        //NSLog(@"当前采集点:%d",(int)currentIndex);
+//        currentIndex++;
+//        BMKSportNode *node = [sportNodes objectAtIndex:currentIndex % sportNodeNum];
+//        sportAnnotation.coordinate = node.coordinate;
+//    } completion:^(BOOL finished) {
+//        if(currentIndex==sportNodeNum){
+//
+//        }else{
+//            [self running];
+//        }
+//    }];
+//}
