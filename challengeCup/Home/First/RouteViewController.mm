@@ -20,6 +20,7 @@
 #import "stayPoint.h"
 #import "detailPoint.h"
 #import "uploadData.h"
+#import "poiModel.h"
 
 #define MYBUNDLE_NAME @ "mapapi.bundle"
 #define MYBUNDLE_PATH [[[NSBundle mainBundle] resourcePath] stringByAppendingPathComponent: MYBUNDLE_NAME]
@@ -27,7 +28,7 @@
 #define BTN_WIDTH 100
 #define BTN_HEIGHT 100
 
-@interface RouteViewController ()<BTKTraceDelegate,BTKTrackDelegate,BTKEntityDelegate,BMKMapViewDelegate,BMKLocationServiceDelegate,UITextFieldDelegate,BTKAnalysisDelegate,BMKGeoCodeSearchDelegate,BMKRouteSearchDelegate>
+@interface RouteViewController ()<BTKTraceDelegate,BTKTrackDelegate,BMKMapViewDelegate,BMKLocationServiceDelegate,UITextFieldDelegate,BTKAnalysisDelegate,BMKGeoCodeSearchDelegate,BMKRouteSearchDelegate>
 
 @property(nonatomic,strong)BMKMapView *mapView;
 @property(nonatomic,strong)BMKLocationService *locService;
@@ -53,7 +54,7 @@
 @property(nonatomic,strong)NSMutableArray *mutArray;//存放网络获取的采集点
 @property(nonatomic,strong)NSMutableArray *stayPointArray;//存放网络获取的停留点
 @property(nonatomic,strong)NSMutableArray *analysisPoints;//停留点两个实例
-@property(nonatomic,strong)dispatch_semaphore_t semaphore;//信号量
+@property(nonatomic,strong)dispatch_semaphore_t semaphore;//信号量（？？？应该是atomic吧）
 @property(nonatomic,strong)dispatch_semaphore_t semaphoreOfAnalysis;
 
 @property(nonatomic,strong)NSString *myEntity;//本机的名字
@@ -66,6 +67,8 @@
 
 @implementation RouteViewController{
     BMKPointAnnotation *customAnnotation;//图片为point1的标注
+    BMKPointAnnotation *startAnnotation;//图片为起点64的标注
+    BMKPointAnnotation *endAnnotation;//图片为终点64的标注
     BMKUserLocation *currentLoc;
     BOOL isNavOver;//判断导航是否结束
 }
@@ -184,7 +187,6 @@
     }
     return _btnBestRoute;
 }
-
 -(UIButton *)btnQueryStayPoint{
     if (!_btnQueryStayPoint) {
         _btnQueryStayPoint=[[UIButton alloc]initWithFrame:CGRectMake(20+70+150, 100, 100, 40)];
@@ -209,7 +211,7 @@
 -(void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:YES];
     [self.mapView viewWillAppear];
-    self.mapView.delegate=self;
+//    self.mapView.delegate=self;//在updateUserPerferences里执行了
     self.geocodesearch.delegate=self;
     self.routesearch.delegate=self;
 }
@@ -236,6 +238,10 @@
     [self.mapView addSubview:self.swGather];
     [self.mapView addSubview:self.btnNav];
     [self.mapView addSubview:self.lbNotice];
+    //第一次加载的时候更新起点终点
+    self.mapView.delegate=self;
+    [self addStartAndEndAnnotation:[USER objectForKey:@"startPoint"]];
+    [self addStartAndEndAnnotation:[USER objectForKey:@"endPoint"]];
     
     dispatch_async(dispatch_get_main_queue(), ^{
         self.locService=[[BMKLocationService alloc]init];
@@ -467,7 +473,6 @@
     
     
 }
-
 #pragma mark停留点按钮点击事件
 -(void)btnClickCustom{
     //清空所有点、轨迹线、标注
@@ -839,6 +844,30 @@
     // 设定当前地图的显示范围
     [self.mapView setRegion:viewRegion animated:YES];
 }
+//添加起点终点
+-(void)addStartAndEndAnnotation:(NSDictionary *)dic{
+    NSString *type=[dic objectForKey:@"type"];
+    NSString *title=[dic objectForKey:@"address"];
+    NSString *lat=[dic objectForKey:@"latitude"];
+    NSString *lon=[dic objectForKey:@"longitude"];
+    NSString *subtitle=[NSString stringWithFormat:@"经度：%@,纬度：%@",lon,lat];
+    if ([type isEqualToString:@"1"]) {
+        [self.mapView removeAnnotation:startAnnotation];
+        startAnnotation = [[BMKPointAnnotation alloc]init];
+        startAnnotation.title=title;
+        startAnnotation.subtitle=subtitle;
+        startAnnotation.coordinate=CLLocationCoordinate2DMake(lat.doubleValue, lon.doubleValue);
+        [self.mapView addAnnotation:startAnnotation];
+    }else if ([type isEqualToString:@"2"]){
+        [self.mapView removeAnnotation:endAnnotation];
+        endAnnotation = [[BMKPointAnnotation alloc]init];
+        endAnnotation.title=title;
+        endAnnotation.subtitle=subtitle;
+        endAnnotation.coordinate=CLLocationCoordinate2DMake(lat.doubleValue, lon.doubleValue);
+        [self.mapView addAnnotation:endAnnotation];
+    }
+
+}
 #pragma mark - 弹出提醒框
 -(void)showAlert{
     NSString *str=[NSString stringWithFormat:@"预期%@，实际%@",self.test_expect,self.test_reality];
@@ -865,12 +894,6 @@
     udata.gatherTimes=[NSString stringWithFormat:@"%d 秒",(int)gt];
     udata.test_expect=self.test_expect;
     udata.test_reality=self.test_reality;
-    //测试赋值
-//    [startPoint setLongitude:120.0 Latitude:30.0];
-//    [endPoint setLongitude:112.0 Latitude:29.0];
-//    udata.test_reality=@[@90,@60,@30];
-//    udata.test_expect=@[@0,@30,@60];
-    
     NSDictionary *dic=@{@"startPoint":startPoint,
                         @"endPoint":endPoint,
                         @"entity":udata.entity,
@@ -936,14 +959,6 @@
     }
     return hour;
 }
-#pragma mark - textField代理
--(BOOL)textFieldShouldBeginEditing:(UITextField *)textField{
-    LLZPickerView *picker=[[LLZPickerView alloc]init];
-    picker.array=@[@"一天前",@"两天前",@"三天前",@"四天前",@"五天前",@"六天前",@"七天前"];
-    picker.title=@"选择时间";
-    [picker show];
-    return NO;
-}
 #pragma mark - 开启关闭服务
 #pragma mark 关闭
 -(void)shutDownService{
@@ -956,148 +971,6 @@
     [self startService];
     [self startGather];
 }
-#pragma mark - 百度鹰眼返回数据
-//停留点分析的回调方法
--(void)onAnalyzeStayPoint:(NSData *)response{
-    // JSON数据解析
-    NSDictionary *dic = [NSJSONSerialization JSONObjectWithData:response options:NSJSONReadingAllowFragments error:nil];
-    NSNumber *status = [dic objectForKey:@"status"];
-    NSString *message = [dic objectForKey:@"message"];
-
-    if ([status longValue] == 0) {
-        dispatch_async(dispatch_get_main_queue(), ^{
-            [SVProgressHUD showSuccessWithStatus:@"分析成功"];
-            [SVProgressHUD dismissWithDelay:0.5];
-        });
-        NSArray *array=[dic objectForKey:@"stay_points"];
-        [self.stayPointArray addObjectsFromArray:array];
-       
-        NSSortDescriptor *des1 = [NSSortDescriptor sortDescriptorWithKey:@"end_time" ascending:YES];
-        [self.stayPointArray sortUsingDescriptors:@[des1]];
-        NSLog(@"%@：停留点一共请求完成了:%d",message,(int)self.stayPointArray.count);
-        //NSLog(@"停留点：%@",self.stayPointArray);
-        dispatch_semaphore_signal(self.semaphore);
-    }else{
-        dispatch_semaphore_signal(self.semaphore);
-        dispatch_async(dispatch_get_main_queue(), ^{
-            [SVProgressHUD showErrorWithStatus:[NSString stringWithFormat:@"%@",message]];
-            [SVProgressHUD dismissWithDelay:2.0];
-        });
-    }
-
-}
-//轨迹查询的回调方法
--(void)onQueryHistoryTrack:(NSData *)response{
-    
-    // JSON数据解析
-    NSDictionary *dic = [NSJSONSerialization JSONObjectWithData:response options:NSJSONReadingMutableContainers error:nil];
-    NSNumber *status = [dic objectForKey:@"status"];
-    NSString *message = [dic objectForKey:@"message"];
-
-    if (self.flag==1) {
-        if ([status longValue] == 0) {
-            NSArray *array=[dic objectForKey:@"points"];
-            [self.mutArray addObjectsFromArray:array];
-            NSSortDescriptor *des2 = [NSSortDescriptor sortDescriptorWithKey:@"loc_time" ascending:NO];
-            [self.mutArray sortUsingDescriptors:@[des2]];
-            //删除掉速度为0的点
-//            NSMutableArray *arr=[[NSMutableArray alloc]init];
-//            arr=self.mutArray;
-//            for (NSUInteger i=0; i<arr.count; i++) {
-//                NSString *speed=[arr[i]objectForKey:@"speed"];
-//                if ((speed.doubleValue-0)<=0.00001) {
-//                    [self.mutArray removeObjectAtIndex:i];
-//                }
-//            }
-            NSLog(@"%@:采集点一共请求完成了:%d",message,(int)self.mutArray.count);
-            dispatch_semaphore_signal(self.semaphore);
-        }else{
-            dispatch_semaphore_signal(self.semaphore);
-            [SVProgressHUD showErrorWithStatus:[NSString stringWithFormat:@"%@",message]];
-            [SVProgressHUD dismissWithDelay:2.0];
-        }
-    }else if(self.flag==2){
-        if ([status longValue] == 0) {
-            [SVProgressHUD showWithStatus:@"智能计算中..."];
-            [SVProgressHUD dismissWithDelay:0.5];
-            NSMutableArray *array=[dic objectForKey:@"points"];
-            //删除掉速度为0的点
-            for (NSUInteger i=0; i<array.count; i++) {
-                NSString *speed=[array[i]objectForKey:@"speed"];
-                if ((speed.doubleValue-0)<=0.00001) {
-                    [array removeObjectAtIndex:i];
-                }
-            }
-            NSLog(@"导航一共请求完成了:%d",(int)array.count);
-            [self.detailRoute removeAllObjects];
-            self.detailRoute=array;
-            dispatch_semaphore_signal(self.semaphore);
-        }else{
-            dispatch_semaphore_signal(self.semaphore);
-            [SVProgressHUD showErrorWithStatus:[NSString stringWithFormat:@"%@",message]];
-            [SVProgressHUD dismissWithDelay:2.0];
-        }
-
-    }
-
-}
-//逆地理编码回调方法
--(void)onGetReverseGeoCodeResult:(BMKGeoCodeSearch *)searcher result:(BMKReverseGeoCodeResult *)result errorCode:(BMKSearchErrorCode)error
-{
-    if (error == 0) {
-        //注释代码内容：根据回调的地理位置，增加标注
-//        CLLocationCoordinate2D coor=result.location;
-//        customAnnotation=[[BMKPointAnnotation alloc]init];
-//        customAnnotation.coordinate=coor;
-//        customAnnotation.title=@"地点";
-//        customAnnotation.subtitle=result.address;
-//        [self.mapView selectAnnotation:customAnnotation animated:NO];
-//        [self.mapView addAnnotation:customAnnotation];
-        NSLog(@"逆地理编码成功");
-        
-    }else{
-        NSLog(@"逆地理编码error：%d",error);
-    }
-}
-//步行路径规划回调方法
-- (void)onGetWalkingRouteResult:(BMKRouteSearch*)searcher result:(BMKWalkingRouteResult*)result errorCode:(BMKSearchErrorCode)error
-{
-    [SVProgressHUD dismiss];
-    //[self.mapView removeOverlays:self.mapView.overlays];
-    if (error == BMK_SEARCH_NO_ERROR) {
-        BMKWalkingRouteLine* plan = (BMKWalkingRouteLine*)[result.routes objectAtIndex:0];
-        //size路段的个数
-        NSInteger size = [plan.steps count];
-        //路段上点集合的个数
-        int planPointCounts = 0;
-        for (int i = 0; i < size; i++) {
-            BMKWalkingStep* transitStep = [plan.steps objectAtIndex:i];
-            //轨迹点总数累计
-            planPointCounts += transitStep.pointsCount;
-        }
-        //轨迹点
-        BMKMapPoint * temppoints = new BMKMapPoint[planPointCounts];
-        int i = 0;
-        for (int j = 0; j < size; j++) {
-            BMKWalkingStep* transitStep = [plan.steps objectAtIndex:j];
-            for(int k=0;k<transitStep.pointsCount;k++) {
-                temppoints[i].x = transitStep.points[k].x;
-                temppoints[i].y = transitStep.points[k].y;
-                i++;
-            }
-            
-        }
-        // 通过temppoints构建BMKPolyline
-        BMKPolyline* polyLine = [BMKPolyline polylineWithPoints:temppoints count:planPointCounts];
-        [self.mapView addOverlay:polyLine]; // 添加路线overlay
-        delete []temppoints;
-        //[self mapViewFitPolyLine:polyLine];
-    }else{
-        NSLog(@"步行路径规划回调error:%d",error);
-    }
-    dispatch_semaphore_signal(self.semaphoreOfAnalysis);
-}
-
 #pragma mark - 通知回调
 //处理回调数据并且显示停留点
 -(void)showStayPointTrack:(NSNotification *)noti{
@@ -1124,7 +997,7 @@
     //label信息
     self.TimeLable.text=@"以下是分析的结果";
     // 手动分配内存存储轨迹点，并获取最小经度minLon、最大经度maxLon、最小纬度minLat、最大纬度maxLat
-      CLLocationCoordinate2D *locations = new CLLocationCoordinate2D[poisWithoutZero.count];
+    CLLocationCoordinate2D *locations = new CLLocationCoordinate2D[poisWithoutZero.count];
     CLLocationDegrees minLon = 180.0;
     CLLocationDegrees maxLon = -180.0;
     CLLocationDegrees minLat = 90.0;
@@ -1201,12 +1074,12 @@
     });
     
     delete [] locations;
-
-
+    
+    
 }
 //处理回调数据并且显示轨迹
 -(void)showTrack:(NSNotification *)noti{
-
+    
     NSMutableArray *array=noti.object;
     // 去除经纬度为(0,0)的点 将剩余的轨迹点存储在poisWithoutZero中
     NSMutableArray *poisWithoutZero = [[NSMutableArray alloc] init]; ;
@@ -1234,17 +1107,17 @@
     CLLocationDegrees maxLon = -180.0;
     CLLocationDegrees minLat = 90.0;
     CLLocationDegrees maxLat = -90.0;
-
+    
     for (int i = 0; i < [poisWithoutZero count]; i++) {
         NSDictionary *point = [poisWithoutZero objectAtIndex:i];
         NSNumber *longitude = [point objectForKey:@"longitude"];
         NSNumber *latitude = [point objectForKey:@"latitude"];
-
+        
         minLon = MIN(minLon, longitude.doubleValue);
         maxLon = MAX(maxLon, longitude.doubleValue);
         minLat = MIN(minLat, latitude.doubleValue);
         maxLat = MAX(maxLat, latitude.doubleValue);
-
+        
         locations[i] = CLLocationCoordinate2DMake(latitude.doubleValue,longitude.doubleValue);
         //以标注的形式添加到地图上
         customAnnotation=[[BMKPointAnnotation alloc]init];
@@ -1259,7 +1132,7 @@
     NSString *confromTimespStr=[XMHelper timeFromTimeStamp:lastTime];
     NSString *str=[NSString stringWithFormat:@"正在为你回放轨迹至%@",confromTimespStr];
     self.TimeLable.text=str;
-
+    
     // 获取轨迹的中心点和经纬度范围，确定轨迹的经纬度区域
     CLLocationCoordinate2D centerCoord = CLLocationCoordinate2DMake((minLat + maxLat) * 0.5f, (minLon + maxLon) * 0.5f);
     BMKCoordinateSpan viewSapn;
@@ -1269,7 +1142,7 @@
     BMKCoordinateRegion viewRegion;
     viewRegion.center = centerCoord;
     viewRegion.span = viewSapn;
-
+    
     if (poisWithoutZero.count > 1) {
         // 设定当前地图的显示范围
         [self.mapView setRegion:viewRegion animated:YES];
@@ -1278,7 +1151,7 @@
     }
     
     delete [] locations;
-
+    
 }
 //处理回调数据并且显示最常去的线路
 -(void)showAnalysisResult:(NSNotification *)noti{
@@ -1409,7 +1282,7 @@
     customAnnotation.coordinate=CLLocationCoordinate2DMake(lat1.doubleValue, lon1.doubleValue);
     [self.mapView addAnnotation:customAnnotation];
     
-
+    
     
     BMKPlanNode *temp=[[BMKPlanNode alloc]init];
     for (int j=0; j<highRatePoint.count; j++) {
@@ -1451,7 +1324,7 @@
     dispatch_group_t group = dispatch_group_create();
     BMKWalkingRoutePlanOption *walkingRouteSearchOption = [[BMKWalkingRoutePlanOption alloc]init];
     //步行路线检索
- 
+    
     dispatch_group_async(group, dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         for (int k=0; k<saveSortedArr.count-1; k++) {
             walkingRouteSearchOption.from=[saveSortedArr objectAtIndex:k];
@@ -1464,10 +1337,10 @@
     dispatch_group_notify(group, dispatch_get_main_queue(), ^{
         
     });
-
-
-
-
+    
+    
+    
+    
     // 获取轨迹的中心点和经纬度范围，确定轨迹的经纬度区域
     CLLocationCoordinate2D centerCoord = CLLocationCoordinate2DMake((minLat + maxLat) * 0.5f, (minLon + maxLon) * 0.5f);
     BMKCoordinateSpan viewSapn;
@@ -1478,7 +1351,7 @@
     viewRegion.center = centerCoord;
     viewRegion.span = viewSapn;
     
-
+    
     // 设定当前地图的显示范围
     [self.mapView setRegion:viewRegion animated:YES];
     
@@ -1486,7 +1359,7 @@
     [self.mutArray removeAllObjects];
     
     
-
+    
 }
 //加标注
 -(void)addPoint:(NSNotification *)noti{
@@ -1523,15 +1396,173 @@
 -(void)getTime:(NSNotification *)notification{
     self.selTime.text=notification.object;
 }
-#pragma mark 更新用户配置
+//更新用户配置
 -(void)updateUserPreferences:(NSNotification *)noti{
+    self.mapView.delegate=self;
+    //更新采集上传时间
     NSUInteger intervals=[[USER objectForKey:@"gatherTimes"] intValue];
     NSUInteger a=30;
     a=[self intervalsFromSlider:intervals];
-
     [[BTKAction sharedInstance] changeGatherAndPackIntervals:a packInterval:a delegate:self];
+    //更新起点终点
+    [self addStartAndEndAnnotation:[USER objectForKey:@"startPoint"]];
+    [self addStartAndEndAnnotation:[USER objectForKey:@"endPoint"]];
 }
-#pragma mark - 百度地图代理
+#pragma mark - 代理方法
+#pragma mark - UITextFieldDelegate代理方法
+-(BOOL)textFieldShouldBeginEditing:(UITextField *)textField{
+    LLZPickerView *picker=[[LLZPickerView alloc]init];
+    picker.array=@[@"一天前",@"两天前",@"三天前",@"四天前",@"五天前",@"六天前",@"七天前"];
+    picker.title=@"选择时间";
+    [picker show];
+    return NO;
+}
+#pragma mark - BTKAnalysisDelegate代理方法
+//停留点分析的回调方法
+-(void)onAnalyzeStayPoint:(NSData *)response{
+    // JSON数据解析
+    NSDictionary *dic = [NSJSONSerialization JSONObjectWithData:response options:NSJSONReadingAllowFragments error:nil];
+    NSNumber *status = [dic objectForKey:@"status"];
+    NSString *message = [dic objectForKey:@"message"];
+
+    if ([status longValue] == 0) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [SVProgressHUD showSuccessWithStatus:@"分析成功"];
+            [SVProgressHUD dismissWithDelay:0.5];
+        });
+        NSArray *array=[dic objectForKey:@"stay_points"];
+        [self.stayPointArray addObjectsFromArray:array];
+       
+        NSSortDescriptor *des1 = [NSSortDescriptor sortDescriptorWithKey:@"end_time" ascending:YES];
+        [self.stayPointArray sortUsingDescriptors:@[des1]];
+        NSLog(@"%@：停留点一共请求完成了:%d",message,(int)self.stayPointArray.count);
+        //NSLog(@"停留点：%@",self.stayPointArray);
+        dispatch_semaphore_signal(self.semaphore);
+    }else{
+        dispatch_semaphore_signal(self.semaphore);
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [SVProgressHUD showErrorWithStatus:[NSString stringWithFormat:@"%@",message]];
+            [SVProgressHUD dismissWithDelay:2.0];
+        });
+    }
+
+}
+#pragma mark - BTKTrackDelegate代理方法
+//轨迹查询的回调方法
+-(void)onQueryHistoryTrack:(NSData *)response{
+    
+    // JSON数据解析
+    NSDictionary *dic = [NSJSONSerialization JSONObjectWithData:response options:NSJSONReadingMutableContainers error:nil];
+    NSNumber *status = [dic objectForKey:@"status"];
+    NSString *message = [dic objectForKey:@"message"];
+
+    if (self.flag==1) {
+        if ([status longValue] == 0) {
+            NSArray *array=[dic objectForKey:@"points"];
+            [self.mutArray addObjectsFromArray:array];
+            NSSortDescriptor *des2 = [NSSortDescriptor sortDescriptorWithKey:@"loc_time" ascending:NO];
+            [self.mutArray sortUsingDescriptors:@[des2]];
+            //删除掉速度为0的点
+//            NSMutableArray *arr=[[NSMutableArray alloc]init];
+//            arr=self.mutArray;
+//            for (NSUInteger i=0; i<arr.count; i++) {
+//                NSString *speed=[arr[i]objectForKey:@"speed"];
+//                if ((speed.doubleValue-0)<=0.00001) {
+//                    [self.mutArray removeObjectAtIndex:i];
+//                }
+//            }
+            NSLog(@"%@:采集点一共请求完成了:%d",message,(int)self.mutArray.count);
+            dispatch_semaphore_signal(self.semaphore);
+        }else{
+            dispatch_semaphore_signal(self.semaphore);
+            [SVProgressHUD showErrorWithStatus:[NSString stringWithFormat:@"%@",message]];
+            [SVProgressHUD dismissWithDelay:2.0];
+        }
+    }else if(self.flag==2){
+        if ([status longValue] == 0) {
+            [SVProgressHUD showWithStatus:@"智能计算中..."];
+            [SVProgressHUD dismissWithDelay:0.5];
+            NSMutableArray *array=[dic objectForKey:@"points"];
+            //删除掉速度为0的点
+            for (NSUInteger i=0; i<array.count; i++) {
+                NSString *speed=[array[i]objectForKey:@"speed"];
+                if ((speed.doubleValue-0)<=0.00001) {
+                    [array removeObjectAtIndex:i];
+                }
+            }
+            NSLog(@"导航一共请求完成了:%d",(int)array.count);
+            [self.detailRoute removeAllObjects];
+            self.detailRoute=array;
+            dispatch_semaphore_signal(self.semaphore);
+        }else{
+            dispatch_semaphore_signal(self.semaphore);
+            [SVProgressHUD showErrorWithStatus:[NSString stringWithFormat:@"%@",message]];
+            [SVProgressHUD dismissWithDelay:2.0];
+        }
+
+    }
+
+}
+#pragma mark - BMKGeoCodeSearchDelegate代理方法
+//逆地理编码回调方法
+-(void)onGetReverseGeoCodeResult:(BMKGeoCodeSearch *)searcher result:(BMKReverseGeoCodeResult *)result errorCode:(BMKSearchErrorCode)error
+{
+    if (error == 0) {
+        //注释代码内容：根据回调的地理位置，增加标注
+//        CLLocationCoordinate2D coor=result.location;
+//        customAnnotation=[[BMKPointAnnotation alloc]init];
+//        customAnnotation.coordinate=coor;
+//        customAnnotation.title=@"地点";
+//        customAnnotation.subtitle=result.address;
+//        [self.mapView selectAnnotation:customAnnotation animated:NO];
+//        [self.mapView addAnnotation:customAnnotation];
+        NSLog(@"逆地理编码成功");
+        
+    }else{
+        NSLog(@"逆地理编码error：%d",error);
+    }
+}
+#pragma mark - BMKRouteSearchDelegate代理方法
+//步行路径规划回调方法
+- (void)onGetWalkingRouteResult:(BMKRouteSearch*)searcher result:(BMKWalkingRouteResult*)result errorCode:(BMKSearchErrorCode)error
+{
+    [SVProgressHUD dismiss];
+    //[self.mapView removeOverlays:self.mapView.overlays];
+    if (error == BMK_SEARCH_NO_ERROR) {
+        BMKWalkingRouteLine* plan = (BMKWalkingRouteLine*)[result.routes objectAtIndex:0];
+        //size路段的个数
+        NSInteger size = [plan.steps count];
+        //路段上点集合的个数
+        int planPointCounts = 0;
+        for (int i = 0; i < size; i++) {
+            BMKWalkingStep* transitStep = [plan.steps objectAtIndex:i];
+            //轨迹点总数累计
+            planPointCounts += transitStep.pointsCount;
+        }
+        //轨迹点
+        BMKMapPoint * temppoints = new BMKMapPoint[planPointCounts];
+        int i = 0;
+        for (int j = 0; j < size; j++) {
+            BMKWalkingStep* transitStep = [plan.steps objectAtIndex:j];
+            for(int k=0;k<transitStep.pointsCount;k++) {
+                temppoints[i].x = transitStep.points[k].x;
+                temppoints[i].y = transitStep.points[k].y;
+                i++;
+            }
+            
+        }
+        // 通过temppoints构建BMKPolyline
+        BMKPolyline* polyLine = [BMKPolyline polylineWithPoints:temppoints count:planPointCounts];
+        [self.mapView addOverlay:polyLine]; // 添加路线overlay
+        delete []temppoints;
+        //[self mapViewFitPolyLine:polyLine];
+    }else{
+        NSLog(@"步行路径规划回调error:%d",error);
+    }
+    dispatch_semaphore_signal(self.semaphoreOfAnalysis);
+}
+
+#pragma mark - BMKMapViewDelegate代理方法
 //标注点击事件
 - (void)mapView:(BMKMapView *)mapView didSelectAnnotationView:(BMKAnnotationView *)view
 {}
@@ -1556,12 +1587,42 @@
         if (annotationView == nil)
         {
             annotationView = [[BMKPinAnnotationView alloc] initWithAnnotation:annotation reuseIdentifier:reuseIndetifier];
+            
         }
         annotationView.image = [UIImage imageNamed:@"point1.png"];
         annotationView.canShowCallout=YES;
         //设置中心点偏移，使得标注底部中间点成为经纬度对应点
         annotationView.centerOffset = CGPointMake(0, 5);
-        
+        return annotationView;
+    }
+    if (annotation==startAnnotation)
+    {
+        static NSString *reuseIndetifier = @"annotationReuseIndetifier";
+        BMKPinAnnotationView *annotationView = (BMKPinAnnotationView *)[mapView dequeueReusableAnnotationViewWithIdentifier:reuseIndetifier];
+        if (annotationView == nil)
+        {
+            annotationView = [[BMKPinAnnotationView alloc] initWithAnnotation:annotation reuseIdentifier:reuseIndetifier];
+            
+        }
+        annotationView.image = [UIImage imageNamed:@"起点64.png"];
+        annotationView.canShowCallout=YES;
+        //设置中心点偏移，使得标注底部中间点成为经纬度对应点
+        annotationView.centerOffset = CGPointMake(0, 5);
+        return annotationView;
+    }
+    if (annotation==endAnnotation)
+    {
+        static NSString *reuseIndetifier = @"annotationReuseIndetifier";
+        BMKPinAnnotationView *annotationView = (BMKPinAnnotationView *)[mapView dequeueReusableAnnotationViewWithIdentifier:reuseIndetifier];
+        if (annotationView == nil)
+        {
+            annotationView = [[BMKPinAnnotationView alloc] initWithAnnotation:annotation reuseIdentifier:reuseIndetifier];
+            
+        }
+        annotationView.image = [UIImage imageNamed:@"终点64.png"];
+        annotationView.canShowCallout=YES;
+        //设置中心点偏移，使得标注底部中间点成为经纬度对应点
+        annotationView.centerOffset = CGPointMake(0, 5);
         return annotationView;
     }
     //动画annotation
@@ -1580,6 +1641,7 @@
     return annotationView;
     
 }
+#pragma mark - BMKLocationServiceDelegate代理方法
 //用户方向更新后，会调用此函数
 - (void)didUpdateUserHeading:(BMKUserLocation *)userLocation
 {
@@ -1635,27 +1697,8 @@
     }
 
 }
-#pragma mark - 和百度鹰眼交互
-//开启轨迹服务
--(void) startService {
-    // 设置开启轨迹服务时的服务选项，指定本次服务以“entityA”的名义开启
-    BTKStartServiceOption *op = [[BTKStartServiceOption alloc] initWithEntityName:self.myEntity];
-    // 开启服务
-    [[BTKAction sharedInstance] startService:op delegate:self];
-    [[BTKAction sharedInstance] setLocationAttributeWithActivityType:CLActivityTypeOther desiredAccuracy:kCLLocationAccuracyNearestTenMeters distanceFilter:10];
-}
-//关闭轨迹服务
--(void) stopService {
-    [[BTKAction sharedInstance] stopService:self];
-}
-//开始采集
--(void) startGather{
-    [[BTKAction sharedInstance] startGather:self];
-}
-//停止采集
--(void) stopGather{
-    [[BTKAction sharedInstance] stopGather:self];
-}
+
+#pragma mark - BTKTraceDelegate代理方法
 //停止轨迹服务的回调方法
 -(void)onStopService:(BTKServiceErrorCode) error{
     if ((int)error==8) {
@@ -1697,7 +1740,27 @@
     }
     
 }
-
+#pragma mark - 和百度鹰眼交互
+//开启轨迹服务
+-(void) startService {
+    // 设置开启轨迹服务时的服务选项，指定本次服务以“entityA”的名义开启
+    BTKStartServiceOption *op = [[BTKStartServiceOption alloc] initWithEntityName:self.myEntity];
+    // 开启服务
+    [[BTKAction sharedInstance] startService:op delegate:self];
+    [[BTKAction sharedInstance] setLocationAttributeWithActivityType:CLActivityTypeOther desiredAccuracy:kCLLocationAccuracyNearestTenMeters distanceFilter:10];
+}
+//关闭轨迹服务
+-(void) stopService {
+    [[BTKAction sharedInstance] stopService:self];
+}
+//开始采集
+-(void) startGather{
+    [[BTKAction sharedInstance] startGather:self];
+}
+//停止采集
+-(void) stopGather{
+    [[BTKAction sharedInstance] stopGather:self];
+}
 #pragma mark - ??????
 - (NSString*)getMyBundlePath1:(NSString *)filename
 {

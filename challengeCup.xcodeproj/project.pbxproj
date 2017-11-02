@@ -8,6 +8,11 @@
 
 /* Begin PBXBuildFile section */
 		411E6CD01F7DF0B700AAA8C5 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 411E6CCF1F7DF0B700AAA8C5 /* Assets.xcassets */; };
+		412240371FA72B400067B71E /* BaiduTraceSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 412240351FA72AAF0067B71E /* BaiduTraceSDK.framework */; };
+		412240381FA72B400067B71E /* BaiduTraceSDK.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 412240351FA72AAF0067B71E /* BaiduTraceSDK.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		418A11EE1FA47B0A007B7CA2 /* PositionCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 418A11EC1FA47B0A007B7CA2 /* PositionCell.m */; };
+		418A11EF1FA47B0A007B7CA2 /* PositionCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 418A11ED1FA47B0A007B7CA2 /* PositionCell.xib */; };
+		418A11F21FA4AF60007B7CA2 /* SelectPositionViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 418A11F11FA4AF60007B7CA2 /* SelectPositionViewController.mm */; };
 		418DC0091F7647CC00BE4EF0 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 418DC0071F7647CC00BE4EF0 /* Main.storyboard */; };
 		418DC00E1F7647CC00BE4EF0 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 418DC00C1F7647CC00BE4EF0 /* LaunchScreen.storyboard */; };
 		418DC0111F7647CC00BE4EF0 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 418DC0101F7647CC00BE4EF0 /* main.m */; };
@@ -45,14 +50,12 @@
 		418DC0971F765A0F00BE4EF0 /* SportAnnotationView.m in Sources */ = {isa = PBXBuildFile; fileRef = 418DC0551F764B8000BE4EF0 /* SportAnnotationView.m */; };
 		418DC0981F765A0F00BE4EF0 /* RouteViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 418DC0611F764BC100BE4EF0 /* RouteViewController.mm */; };
 		418DC0991F765A0F00BE4EF0 /* gatherTimeCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 418DC0401F764A3800BE4EF0 /* gatherTimeCell.m */; };
-		418DC09A1F765A0F00BE4EF0 /* autoLocCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 418DC0441F764A5400BE4EF0 /* autoLocCell.m */; };
 		418DC09B1F765A0F00BE4EF0 /* customSlider.m in Sources */ = {isa = PBXBuildFile; fileRef = 418DC0461F764A5400BE4EF0 /* customSlider.m */; };
 		418DC09C1F765A0F00BE4EF0 /* setGatherTimesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 418DC0491F764A8C00BE4EF0 /* setGatherTimesViewController.m */; };
 		418DC09D1F765A0F00BE4EF0 /* XMHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 418DC03F1F7649E200BE4EF0 /* XMHelper.m */; };
-		418DC09F1F765E3700BE4EF0 /* BaiduTraceSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 418DC09E1F765E3700BE4EF0 /* BaiduTraceSDK.framework */; };
-		418DC0A01F765E3700BE4EF0 /* BaiduTraceSDK.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 418DC09E1F765E3700BE4EF0 /* BaiduTraceSDK.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		41A507D51FA616F9004AE540 /* poiModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 41A507D41FA616F9004AE540 /* poiModel.m */; };
+		41AFA4EB1FA6EA700013F46A /* autoLocCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 41AFA4EA1FA6EA700013F46A /* autoLocCell.m */; };
 		41DC2FC71FA176210015A164 /* 采集点运动方法 in Resources */ = {isa = PBXBuildFile; fileRef = 41DC2FC61FA176210015A164 /* 采集点运动方法 */; };
-		41DC2FC91FA177EC0015A164 /* 逆地理检索 in Resources */ = {isa = PBXBuildFile; fileRef = 41DC2FC81FA177EC0015A164 /* 逆地理检索 */; };
 		721775DA2DC78149B456EE93 /* libPods-challengeCup.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 838D08D4D639958A45768D8C /* libPods-challengeCup.a */; };
 /* End PBXBuildFile section */
 
@@ -80,7 +83,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				418DC0A01F765E3700BE4EF0 /* BaiduTraceSDK.framework in Embed Frameworks */,
+				412240381FA72B400067B71E /* BaiduTraceSDK.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -90,6 +93,12 @@
 /* Begin PBXFileReference section */
 		369D17A6D35F201C5B8493C5 /* Pods-challengeCup.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-challengeCup.debug.xcconfig"; path = "Pods/Target Support Files/Pods-challengeCup/Pods-challengeCup.debug.xcconfig"; sourceTree = "<group>"; };
 		411E6CCF1F7DF0B700AAA8C5 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		412240351FA72AAF0067B71E /* BaiduTraceSDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = BaiduTraceSDK.framework; sourceTree = "<group>"; };
+		418A11EB1FA47B0A007B7CA2 /* PositionCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PositionCell.h; sourceTree = "<group>"; };
+		418A11EC1FA47B0A007B7CA2 /* PositionCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PositionCell.m; sourceTree = "<group>"; };
+		418A11ED1FA47B0A007B7CA2 /* PositionCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PositionCell.xib; sourceTree = "<group>"; };
+		418A11F01FA4AF60007B7CA2 /* SelectPositionViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SelectPositionViewController.h; sourceTree = "<group>"; };
+		418A11F11FA4AF60007B7CA2 /* SelectPositionViewController.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = SelectPositionViewController.mm; sourceTree = "<group>"; };
 		418DBFFE1F7647CC00BE4EF0 /* challengeCup.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = challengeCup.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		418DC0081F7647CC00BE4EF0 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		418DC00D1F7647CC00BE4EF0 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
@@ -105,8 +114,6 @@
 		418DC03F1F7649E200BE4EF0 /* XMHelper.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = XMHelper.m; sourceTree = "<group>"; };
 		418DC0401F764A3800BE4EF0 /* gatherTimeCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = gatherTimeCell.m; sourceTree = "<group>"; };
 		418DC0411F764A3800BE4EF0 /* gatherTimeCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = gatherTimeCell.h; sourceTree = "<group>"; };
-		418DC0441F764A5400BE4EF0 /* autoLocCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = autoLocCell.m; path = "../../../../spy on/spy on/autoLocCell.m"; sourceTree = "<group>"; };
-		418DC0451F764A5400BE4EF0 /* autoLocCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = autoLocCell.h; path = "../../../../spy on/spy on/autoLocCell.h"; sourceTree = "<group>"; };
 		418DC0461F764A5400BE4EF0 /* customSlider.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = customSlider.m; sourceTree = "<group>"; };
 		418DC0471F764A5500BE4EF0 /* customSlider.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = customSlider.h; sourceTree = "<group>"; };
 		418DC0481F764A8B00BE4EF0 /* setGatherTimesViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = setGatherTimesViewController.h; sourceTree = "<group>"; };
@@ -158,9 +165,11 @@
 		418DC0851F7654C800BE4EF0 /* libsqlite3.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libsqlite3.tbd; path = usr/lib/libsqlite3.tbd; sourceTree = SDKROOT; };
 		418DC0871F7654D300BE4EF0 /* libicucore.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libicucore.tbd; path = usr/lib/libicucore.tbd; sourceTree = SDKROOT; };
 		418DC0891F7654EC00BE4EF0 /* libc++.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = "libc++.tbd"; path = "usr/lib/libc++.tbd"; sourceTree = SDKROOT; };
-		418DC09E1F765E3700BE4EF0 /* BaiduTraceSDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = BaiduTraceSDK.framework; sourceTree = "<group>"; };
+		41A507D31FA616F9004AE540 /* poiModel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = poiModel.h; sourceTree = "<group>"; };
+		41A507D41FA616F9004AE540 /* poiModel.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = poiModel.m; sourceTree = "<group>"; };
+		41AFA4E91FA6EA700013F46A /* autoLocCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = autoLocCell.h; sourceTree = "<group>"; };
+		41AFA4EA1FA6EA700013F46A /* autoLocCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = autoLocCell.m; sourceTree = "<group>"; };
 		41DC2FC61FA176210015A164 /* 采集点运动方法 */ = {isa = PBXFileReference; lastKnownFileType = text; path = "采集点运动方法"; sourceTree = "<group>"; };
-		41DC2FC81FA177EC0015A164 /* 逆地理检索 */ = {isa = PBXFileReference; lastKnownFileType = text; path = "逆地理检索"; sourceTree = "<group>"; };
 		6DA7948F1D65567971DCF530 /* Pods-challengeCup.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-challengeCup.release.xcconfig"; path = "Pods/Target Support Files/Pods-challengeCup/Pods-challengeCup.release.xcconfig"; sourceTree = "<group>"; };
 		838D08D4D639958A45768D8C /* libPods-challengeCup.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-challengeCup.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -173,7 +182,7 @@
 				418DC08A1F7654EC00BE4EF0 /* libc++.tbd in Frameworks */,
 				418DC0881F7654D300BE4EF0 /* libicucore.tbd in Frameworks */,
 				418DC0861F7654C800BE4EF0 /* libsqlite3.tbd in Frameworks */,
-				418DC09F1F765E3700BE4EF0 /* BaiduTraceSDK.framework in Frameworks */,
+				412240371FA72B400067B71E /* BaiduTraceSDK.framework in Frameworks */,
 				418DC0841F7654BD00BE4EF0 /* libstdc++.6.0.9.tbd in Frameworks */,
 				418DC0821F7654B300BE4EF0 /* libz.1.2.5.tbd in Frameworks */,
 				418DC07E1F76541A00BE4EF0 /* OpenGLES.framework in Frameworks */,
@@ -211,7 +220,7 @@
 		418DBFF51F7647CC00BE4EF0 = {
 			isa = PBXGroup;
 			children = (
-				418DC09E1F765E3700BE4EF0 /* BaiduTraceSDK.framework */,
+				412240351FA72AAF0067B71E /* BaiduTraceSDK.framework */,
 				418DC0001F7647CC00BE4EF0 /* challengeCup */,
 				418DC0191F7647CC00BE4EF0 /* challengeCupTests */,
 				418DC0241F7647CC00BE4EF0 /* challengeCupUITests */,
@@ -273,9 +282,12 @@
 		418DC0341F76485D00BE4EF0 /* Setting */ = {
 			isa = PBXGroup;
 			children = (
+				41A507D21FA616C1004AE540 /* Model */,
 				418DC0371F76492100BE4EF0 /* View */,
 				418DC0481F764A8B00BE4EF0 /* setGatherTimesViewController.h */,
 				418DC0491F764A8C00BE4EF0 /* setGatherTimesViewController.m */,
+				418A11F01FA4AF60007B7CA2 /* SelectPositionViewController.h */,
+				418A11F11FA4AF60007B7CA2 /* SelectPositionViewController.mm */,
 			);
 			path = Setting;
 			sourceTree = "<group>";
@@ -313,12 +325,15 @@
 		418DC0371F76492100BE4EF0 /* View */ = {
 			isa = PBXGroup;
 			children = (
+				41AFA4E91FA6EA700013F46A /* autoLocCell.h */,
+				41AFA4EA1FA6EA700013F46A /* autoLocCell.m */,
 				418DC0411F764A3800BE4EF0 /* gatherTimeCell.h */,
 				418DC0401F764A3800BE4EF0 /* gatherTimeCell.m */,
-				418DC0451F764A5400BE4EF0 /* autoLocCell.h */,
-				418DC0441F764A5400BE4EF0 /* autoLocCell.m */,
 				418DC0471F764A5500BE4EF0 /* customSlider.h */,
 				418DC0461F764A5400BE4EF0 /* customSlider.m */,
+				418A11EB1FA47B0A007B7CA2 /* PositionCell.h */,
+				418A11EC1FA47B0A007B7CA2 /* PositionCell.m */,
+				418A11ED1FA47B0A007B7CA2 /* PositionCell.xib */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -390,11 +405,19 @@
 			path = Model;
 			sourceTree = "<group>";
 		};
+		41A507D21FA616C1004AE540 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				41A507D31FA616F9004AE540 /* poiModel.h */,
+				41A507D41FA616F9004AE540 /* poiModel.m */,
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
 		41DC2FC41FA175620015A164 /* Tpl */ = {
 			isa = PBXGroup;
 			children = (
 				41DC2FC61FA176210015A164 /* 采集点运动方法 */,
-				41DC2FC81FA177EC0015A164 /* 逆地理检索 */,
 			);
 			path = Tpl;
 			sourceTree = "<group>";
@@ -550,9 +573,9 @@
 			files = (
 				418DC00E1F7647CC00BE4EF0 /* LaunchScreen.storyboard in Resources */,
 				411E6CD01F7DF0B700AAA8C5 /* Assets.xcassets in Resources */,
+				418A11EF1FA47B0A007B7CA2 /* PositionCell.xib in Resources */,
 				418DC0091F7647CC00BE4EF0 /* Main.storyboard in Resources */,
 				41DC2FC71FA176210015A164 /* 采集点运动方法 in Resources */,
-				41DC2FC91FA177EC0015A164 /* 逆地理检索 in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -627,24 +650,27 @@
 			files = (
 				418DC08D1F765A0F00BE4EF0 /* Foundation+Log.m in Sources */,
 				418DC08E1F765A0F00BE4EF0 /* clearCache.m in Sources */,
+				418A11F21FA4AF60007B7CA2 /* SelectPositionViewController.mm in Sources */,
 				418DC08F1F765A0F00BE4EF0 /* CustomViewController.m in Sources */,
 				418DC0901F765A0F00BE4EF0 /* MapViewController.m in Sources */,
 				418DC0911F765A0F00BE4EF0 /* BMKSportNode.m in Sources */,
 				418DC0921F765A0F00BE4EF0 /* detailPoint.m in Sources */,
+				41AFA4EB1FA6EA700013F46A /* autoLocCell.m in Sources */,
 				418DC0931F765A0F00BE4EF0 /* stayPoint.m in Sources */,
 				418DC0941F765A0F00BE4EF0 /* uploadData.m in Sources */,
+				418A11EE1FA47B0A007B7CA2 /* PositionCell.m in Sources */,
 				418DC0951F765A0F00BE4EF0 /* LLZPickerView.m in Sources */,
 				418DC0961F765A0F00BE4EF0 /* MyAnimatedAnnotationView.m in Sources */,
 				418DC0971F765A0F00BE4EF0 /* SportAnnotationView.m in Sources */,
 				418DC0981F765A0F00BE4EF0 /* RouteViewController.mm in Sources */,
 				418DC0991F765A0F00BE4EF0 /* gatherTimeCell.m in Sources */,
-				418DC09A1F765A0F00BE4EF0 /* autoLocCell.m in Sources */,
 				418DC09B1F765A0F00BE4EF0 /* customSlider.m in Sources */,
 				418DC09C1F765A0F00BE4EF0 /* setGatherTimesViewController.m in Sources */,
 				418DC09D1F765A0F00BE4EF0 /* XMHelper.m in Sources */,
 				418DC08C1F7659E100BE4EF0 /* YDViewController.m in Sources */,
 				418DC08B1F7659DB00BE4EF0 /* AppDelegate.mm in Sources */,
 				418DC0111F7647CC00BE4EF0 /* main.m in Sources */,
+				41A507D51FA616F9004AE540 /* poiModel.m in Sources */,
 				418DC0521F764B5500BE4EF0 /* MMainViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
